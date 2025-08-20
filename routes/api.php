@@ -1,22 +1,19 @@
 <?php
 
-use App\Http\Controllers\Api\AcPaymentOrderController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LgRequirementController;
+use App\Http\Controllers\Api\AcPaymentOrderController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('logout', [AuthController::class, 'logout']);
-
-    // Route::get('mine-table-rqf', [AcPaymentOrderController::class, 'index']);
-
 });
 
-Route::get('mine-table-rqf', [AcPaymentOrderController::class, 'index']);
-Route::get('/lg-requirements', [LgRequirementController::class, 'index']);
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('auth/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
 
-Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
+    Route::get('mine-table-rqf', [AcPaymentOrderController::class, 'index']);
+    Route::get('/lg-requirements', [LgRequirementController::class, 'index']);
+});

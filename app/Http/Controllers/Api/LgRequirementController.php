@@ -17,7 +17,9 @@ class LgRequirementController extends Controller
                 'lgPlace',
                 'details',
             ])
+            ->where('status', 'PRE')
             ->latest()
+            ->take(10)
             ->get();
 
             $data = $requirements->map(function ($req) {
@@ -32,7 +34,7 @@ class LgRequirementController extends Controller
 
                 return [
                     'id' => 'RQA-' . str_pad($req->id, 3, '0', STR_PAD_LEFT),
-                    'estado' => $req->status ?? 'Pendiente',
+                    'estado' => $req->status,
                     'fechaSolicitud' => optional($req->date ?? $req->created_at)->toDateString(),
                     'prioridad' => $prioridad,
                     'revisadoPor' => optional($req->user_revision)->name ?? 'Pendiente',

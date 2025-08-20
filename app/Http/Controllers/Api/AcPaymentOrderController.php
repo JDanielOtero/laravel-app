@@ -22,6 +22,7 @@ class AcPaymentOrderController extends Controller
             ])
             ->where('type_desk', 'CHILD')
             ->latest()
+            ->take(10)
             ->get();
 
             $data = $orders->map(function ($order) {
